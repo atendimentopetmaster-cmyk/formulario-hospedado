@@ -244,9 +244,7 @@
 
             <div class="form-group">
                 <label for="fornecedor">Fornecedor <span class="required">*</span></label>
-                <select id="fornecedor" name="fornecedor" required>
-                    <option value="">Selecione...</option>
-                </select>
+                <input type="text" id="fornecedor" name="fornecedor" required placeholder="Digite o nome do fornecedor">
             </div>
 
             <div class="form-group">
@@ -322,7 +320,6 @@
                 
                 // Popular dropdowns
                 popularDropdown('responsavel', dadosListas.responsaveis);
-                popularDropdown('fornecedor', dadosListas.fornecedores);
                 popularDropdownTipos('tipo_despesa', dadosListas.tipos_despesa);
                 popularDropdown('conta_pagamento', dadosListas.contas_pagamento);
                 
