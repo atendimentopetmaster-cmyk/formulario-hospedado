@@ -3,91 +3,550 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário Hospedado</title>
+    <title>Lançamento de Contas a Pagar</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
-            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
         .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
         }
+
         h1 {
             color: #333;
-            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
         }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
+
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
         }
-        input, textarea, select {
+
+        label .required {
+            color: #e74c3c;
+        }
+
+        input, select, textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
         }
-        button {
-            background-color: #007bff;
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .parcelas-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .parcelas-container.visible {
+            display: block;
+        }
+
+        .parcela-item {
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .parcela-item h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .parcela-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 12px 30px;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            padding: 14px 30px;
+            border-radius: 6px;
             font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        button:hover {
-            background-color: #0056b3;
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.visible {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.visible {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #1565c0;
+        }
+
+        .valor-total-info {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #856404;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .parcela-fields {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Formulário de Contato</h1>
-        <form action="#" method="post">
+        <h1>Lançamento de Contas a Pagar</h1>
+        <p class="subtitle">Preencha os dados da conta a pagar. Os campos marcados com <span class="required">*</span> são obrigatórios.</p>
+
+        <div id="alert" class="alert"></div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Carregando dados...</p>
+        </div>
+
+        <form id="formContasPagar">
+            <!-- Dados Básicos -->
             <div class="form-group">
-                <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="telefone">Telefone:</label>
-                <input type="tel" id="telefone" name="telefone">
-            </div>
-            
-            <div class="form-group">
-                <label for="assunto">Assunto:</label>
-                <select id="assunto" name="assunto">
-                    <option value="">Selecione um assunto</option>
-                    <option value="suporte">Suporte</option>
-                    <option value="vendas">Vendas</option>
-                    <option value="informacoes">Informações</option>
-                    <option value="outros">Outros</option>
+                <label for="responsavel">Responsável <span class="required">*</span></label>
+                <select id="responsavel" name="responsavel" required>
+                    <option value="">Selecione...</option>
                 </select>
             </div>
-            
+
             <div class="form-group">
-                <label for="mensagem">Mensagem:</label>
-                <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+                <label for="fornecedor">Fornecedor <span class="required">*</span></label>
+                <select id="fornecedor" name="fornecedor" required>
+                    <option value="">Selecione...</option>
+                </select>
             </div>
-            
-            <button type="submit">Enviar Mensagem</button>
+
+            <div class="form-group">
+                <label for="tipo_despesa">Tipo de Despesa <span class="required">*</span></label>
+                <select id="tipo_despesa" name="tipo_despesa" required>
+                    <option value="">Selecione...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="nota_fiscal">Número da Nota Fiscal <span class="required">*</span></label>
+                <input type="text" id="nota_fiscal" name="nota_fiscal" required placeholder="Ex: 12345">
+            </div>
+
+            <div class="form-group">
+                <label for="valor_total">Valor Total da Despesa (R$) <span class="required">*</span></label>
+                <input type="number" id="valor_total" name="valor_total" step="0.01" min="0.01" required placeholder="0.00">
+            </div>
+
+            <div class="form-group">
+                <label for="qtd_parcelas">Quantidade de Parcelas <span class="required">*</span></label>
+                <input type="number" id="qtd_parcelas" name="qtd_parcelas" min="1" max="120" required placeholder="1">
+            </div>
+
+            <div class="form-group">
+                <label for="conta_pagamento">Conta de Pagamento <span class="required">*</span></label>
+                <select id="conta_pagamento" name="conta_pagamento" required>
+                    <option value="">Selecione...</option>
+                </select>
+            </div>
+
+            <!-- Container de Parcelas (gerado dinamicamente) -->
+            <div id="parcelasContainer" class="parcelas-container">
+                <div class="info-box">
+                    📋 Informe a data de vencimento e o valor de cada parcela. Os valores foram divididos igualmente, mas você pode ajustá-los conforme necessário.
+                </div>
+                <div id="valorTotalInfo" class="valor-total-info"></div>
+                <div id="parcelasList"></div>
+            </div>
+
+            <button type="submit" class="btn" id="btnSubmit">Salvar</button>
         </form>
     </div>
+
+    <script>
+        // Configuração - ALTERE ESTAS URLs PARA AS URLs DO SEU WORKFLOW N8N
+        const N8N_WEBHOOK_URL = 'https://n8n.srv1025694.hstgr.cloud/webhook/contas-pagar';
+        const N8N_DADOS_URL = 'https://n8n.srv1025694.hstgr.cloud/webhook/contas-pagar/dados';
+
+        // Estado da aplicação
+        let dadosListas = null;
+
+        // Elementos do DOM
+        const form = document.getElementById('formContasPagar');
+        const qtdParcelasInput = document.getElementById('qtd_parcelas');
+        const valorTotalInput = document.getElementById('valor_total');
+        const parcelasContainer = document.getElementById('parcelasContainer');
+        const parcelasList = document.getElementById('parcelasList');
+        const valorTotalInfo = document.getElementById('valorTotalInfo');
+        const alertBox = document.getElementById('alert');
+        const loadingBox = document.getElementById('loading');
+        const btnSubmit = document.getElementById('btnSubmit');
+
+        // Carregar dados das listas ao iniciar
+        async function carregarDados() {
+            try {
+                loadingBox.classList.add('visible');
+                
+                const response = await fetch(N8N_DADOS_URL);
+                if (!response.ok) throw new Error('Erro ao carregar dados');
+                
+                dadosListas = await response.json();
+                
+                // Popular dropdowns
+                popularDropdown('responsavel', dadosListas.responsaveis);
+                popularDropdown('fornecedor', dadosListas.fornecedores);
+                popularDropdownTipos('tipo_despesa', dadosListas.tipos_despesa);
+                popularDropdown('conta_pagamento', dadosListas.contas_pagamento);
+                
+                loadingBox.classList.remove('visible');
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarAlerta('Erro ao carregar dados do formulário. Por favor, recarregue a página.', 'error');
+                loadingBox.classList.remove('visible');
+            }
+        }
+
+        function popularDropdown(elementId, opcoes) {
+            const select = document.getElementById(elementId);
+            opcoes.forEach(opcao => {
+                const option = document.createElement('option');
+                option.value = opcao;
+                option.textContent = opcao;
+                select.appendChild(option);
+            });
+        }
+
+        function popularDropdownTipos(elementId, tipos) {
+            const select = document.getElementById(elementId);
+            tipos.forEach(tipo => {
+                const option = document.createElement('option');
+                // Enviar no formato "CODIGO - NOME" para facilitar o processamento no backend
+                option.value = `${tipo.codigo} - ${tipo.nome}`;
+                option.textContent = `${tipo.codigo} - ${tipo.nome}`;
+                select.appendChild(option);
+            });
+        }
+
+        // Gerar campos de parcelas dinamicamente
+        function gerarCamposParcelas() {
+            const qtdParcelas = parseInt(qtdParcelasInput.value);
+            const valorTotal = parseFloat(valorTotalInput.value);
+
+            if (!qtdParcelas || qtdParcelas < 1 || !valorTotal || valorTotal <= 0) {
+                parcelasContainer.classList.remove('visible');
+                return;
+            }
+
+            parcelasList.innerHTML = '';
+            parcelasContainer.classList.add('visible');
+
+            // Calcular valor de cada parcela com precisão
+            const valorParcela = Math.floor((valorTotal / qtdParcelas) * 100) / 100;
+            let somaAcumulada = 0;
+
+            for (let i = 1; i <= qtdParcelas; i++) {
+                // Ajustar última parcela para garantir soma exata
+                let valorParcelaAtual;
+                if (i === qtdParcelas) {
+                    valorParcelaAtual = (valorTotal - somaAcumulada).toFixed(2);
+                } else {
+                    valorParcelaAtual = valorParcela.toFixed(2);
+                    somaAcumulada += parseFloat(valorParcelaAtual);
+                }
+
+                const parcelaDiv = document.createElement('div');
+                parcelaDiv.className = 'parcela-item';
+                parcelaDiv.innerHTML = `
+                    <h3>Parcela ${i}/${qtdParcelas}</h3>
+                    <div class="parcela-fields">
+                        <div class="form-group">
+                            <label for="data_${i}">Data de Vencimento <span class="required">*</span></label>
+                            <input type="date" id="data_${i}" name="data_${i}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="valor_${i}">Valor (R$) <span class="required">*</span></label>
+                            <input type="number" id="valor_${i}" name="valor_${i}" step="0.01" min="0.01" value="${valorParcelaAtual}" required>
+                        </div>
+                    </div>
+                `;
+                parcelasList.appendChild(parcelaDiv);
+
+                // Adicionar listener para recalcular soma
+                const valorInput = parcelaDiv.querySelector(`#valor_${i}`);
+                valorInput.addEventListener('input', atualizarSomaParcelas);
+            }
+
+            atualizarSomaParcelas();
+        }
+
+        // Atualizar soma das parcelas em tempo real
+        function atualizarSomaParcelas() {
+            const qtdParcelas = parseInt(qtdParcelasInput.value);
+            const valorTotal = parseFloat(valorTotalInput.value);
+
+            if (!qtdParcelas || !valorTotal) return;
+
+            let soma = 0;
+            for (let i = 1; i <= qtdParcelas; i++) {
+                const valorInput = document.getElementById(`valor_${i}`);
+                if (valorInput) {
+                    soma += parseFloat(valorInput.value) || 0;
+                }
+            }
+
+            const diferenca = Math.abs(soma - valorTotal);
+            const somaCorreta = diferenca <= 0.02;
+
+            valorTotalInfo.innerHTML = `
+                <strong>Soma das parcelas:</strong> R$ ${soma.toFixed(2)} 
+                <strong>|</strong> 
+                <strong>Total esperado:</strong> R$ ${valorTotal.toFixed(2)}
+                ${!somaCorreta ? ' <strong style="color: #d32f2f;">⚠️ Valores não conferem!</strong>' : ' <strong style="color: #2e7d32;">✓ OK</strong>'}
+            `;
+        }
+
+        // Event listeners
+        qtdParcelasInput.addEventListener('change', gerarCamposParcelas);
+        qtdParcelasInput.addEventListener('input', gerarCamposParcelas);
+        valorTotalInput.addEventListener('change', gerarCamposParcelas);
+        valorTotalInput.addEventListener('blur', gerarCamposParcelas);
+
+        // Submeter formulário
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const qtdParcelas = parseInt(qtdParcelasInput.value);
+            const valorTotal = parseFloat(valorTotalInput.value);
+
+            // Validar parcelas
+            const parcelas = [];
+            let somaValores = 0;
+
+            for (let i = 1; i <= qtdParcelas; i++) {
+                const dataInput = document.getElementById(`data_${i}`);
+                const valorInput = document.getElementById(`valor_${i}`);
+
+                if (!dataInput || !valorInput) {
+                    mostrarAlerta(`Erro: campos da parcela ${i} não encontrados.`, 'error');
+                    return;
+                }
+
+                const data = dataInput.value;
+                const valor = parseFloat(valorInput.value);
+
+                if (!data || !valor || valor <= 0) {
+                    mostrarAlerta(`Por favor, preencha todos os campos da parcela ${i}/${qtdParcelas}.`, 'error');
+                    return;
+                }
+
+                parcelas.push({
+                    data_vencimento: data,
+                    valor: valor
+                });
+
+                somaValores += valor;
+            }
+
+            // Validar soma das parcelas (tolerância de 2 centavos)
+            const diferenca = Math.abs(somaValores - valorTotal);
+            if (diferenca > 0.02) {
+                mostrarAlerta(`A soma das parcelas (R$ ${somaValores.toFixed(2)}) não corresponde ao valor total (R$ ${valorTotal.toFixed(2)}). Diferença: R$ ${diferenca.toFixed(2)}`, 'error');
+                return;
+            }
+
+            // Preparar dados para envio
+            const formData = {
+                responsavel: document.getElementById('responsavel').value,
+                fornecedor: document.getElementById('fornecedor').value,
+                tipo_despesa: document.getElementById('tipo_despesa').value,
+                nota_fiscal: document.getElementById('nota_fiscal').value,
+                valor_total: valorTotal,
+                qtd_parcelas: qtdParcelas,
+                conta_pagamento: document.getElementById('conta_pagamento').value,
+                parcelas: JSON.stringify(parcelas)
+            };
+
+            // Enviar para n8n
+            try {
+                btnSubmit.disabled = true;
+                btnSubmit.textContent = 'Salvando...';
+
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    mostrarAlerta(`✅ ${result.message} ${result.parcelas_salvas} parcela(s) foram registradas.`, 'success');
+                    form.reset();
+                    parcelasContainer.classList.remove('visible');
+                    parcelasList.innerHTML = '';
+                    valorTotalInfo.innerHTML = '';
+                } else {
+                    mostrarAlerta(`❌ ${result.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarAlerta(`❌ Erro ao enviar dados: ${error.message}. Por favor, verifique sua conexão e tente novamente.`, 'error');
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = 'Salvar';
+            }
+        });
+
+        function mostrarAlerta(mensagem, tipo) {
+            alertBox.textContent = mensagem;
+            alertBox.className = `alert alert-${tipo} visible`;
+            
+            // Auto-ocultar após 8 segundos
+            setTimeout(() => {
+                alertBox.classList.remove('visible');
+            }, 8000);
+
+            // Scroll para o topo
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Inicializar
+        carregarDados();
+    </script>
 </body>
 </html>
+
