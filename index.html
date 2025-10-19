@@ -453,7 +453,7 @@
             const notaFiscal = document.getElementById('nota_fiscal').value;
             const contaPagamento = document.getElementById('conta_pagamento').value;
 
-            if (!responsavel || !fornecedor || !tipoDespesa || !notaFiscal || !contaPagamento) {
+            if (!responsavel || !fornecedor || !tipoDespesa || !descricao || !notaFiscal || !contaPagamento) {
                 mostrarAlerta('Por favor, preencha todos os campos obrigatórios do formulário.', 'error');
                 return;
             }
@@ -512,6 +512,7 @@
                 responsavel: document.getElementById('responsavel').value,
                 fornecedor: document.getElementById('fornecedor').value,
                 tipo_despesa: document.getElementById('tipo_despesa').value,
+                descricao: document.getElementById('descricao').value,
                 nota_fiscal: document.getElementById('nota_fiscal').value,
                 valor_total: valorTotal,
                 qtd_parcelas: qtdParcelas,
